@@ -192,3 +192,46 @@ SHOW KEYS FROM TableName WHERE Key_name = 'PRIMARY';
 ✅ Yes. A table can have **many foreign keys**, referencing different parent tables.
 
 ---
+
+
+
+# 🗑️ DELETE vs TRUNCATE in SQL
+
+## 🔍 Key Differences
+
+| Feature                 | `DELETE`                                  | `TRUNCATE`                               |
+|-------------------------|-------------------------------------------|-------------------------------------------|
+| Deletes rows            | ✅ Yes                                     | ✅ Yes                                     |
+| Can use `WHERE` clause  | ✅ Yes – can delete specific rows          | ❌ No – deletes **all** rows              |
+| Affects triggers        | ✅ Yes – fires triggers                    | ❌ No – usually doesn’t fire triggers     |
+| Rollback (Transaction)  | ✅ Yes – fully rollback-able               | ✅ Depends on DB engine (e.g., SQL Server: yes; MySQL: sometimes no) |
+| Resets identity column  | ❌ No (unless specified manually)          | ✅ Yes – resets auto-increment counters   |
+| Speed                  | 🐢 Slower (row-by-row operation)          | ⚡ Faster (page-level deallocation)       |
+| Log usage               | ✅ Fully logs each deleted row             | ✅ Minimal logging (structure only)       |
+| Referential integrity   | ✅ Enforced (foreign keys checked)         | ❌ May require disabling foreign keys     |
+
+---
+
+## 🔑 Summary
+
+- **Use `DELETE`** when:
+  - You want to remove **specific rows**.
+  - You need to maintain **referential integrity**, fire **triggers**, or log changes.
+  
+- **Use `TRUNCATE`** when:
+  - You want to quickly remove **all rows** from a table.
+  - You don’t need to trigger constraints or keep identity values.
+
+---
+
+## 📌 Example Usage
+
+```sql
+-- DELETE specific rows with a condition
+DELETE FROM Orders WHERE OrderID = 101;
+
+-- TRUNCATE all rows from the table
+TRUNCATE TABLE Orders;
+```
+
+---
